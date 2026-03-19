@@ -524,4 +524,223 @@ If caller names a different provider than EHR shows: flag it, don't silently acc
 
 ---
 
+## SECTION 7: SPECIFIC TEST-LEVEL NOTES FROM LIVE REVIEW
+
+These are direct observations made during the live 120-test run, mapped to specific test numbers.
+
+### Test 5 (A05) — Sarah Brown Minor: "Immediate Danger" Loop
+Agent got caught in what appears to be a safety/crisis detection loop after mother identified herself. The agent recognized Sarah's age and inactive status correctly, but then the conversation DIED. This may be the agent's crisis protocol misfiring because a minor + inactive record + parent calling triggered an "immediate danger" heuristic. **FIX:** Review the crisis/safety detection logic. A parent calling to reactivate a 15-year-old's inactive record is NOT a crisis — it's a routine administrative request. The danger detection should only trigger on explicit crisis language (suicidal ideation, self-harm, etc.), not on minor+inactive combinations.
+
+### Test 11 (A11) — Jane Doe: Should Pull Appointments
+Agent said "Let me connect you with the right team to look up your appointment details" and TRANSFERRED the call. Agent MUST be able to pull next appointment and all previous appointments from the system. If Jane has no appointments, say: "I don't see any upcoming appointments on file. Would you like to schedule one?"
+
+### Test 12 (A12) — Robert Johnson: Phone Number Recognition
+Agent should ask: "Is the number you're calling from a good number to reach you?" or check if the caller's phone matches the one on file. This creates a smoother verification experience. Should also be able to recognize the calling number and say "I see the number ending in XXXX on file — is that still the best way to reach you?"
+
+### Test 12 (A12) — "I'm not able to access patient records directly"
+This is the single worst sentence the agent can say. Its ENTIRE JOB is accessing patient records. This must be removed from the agent's vocabulary completely. If a tool fails, say: "I'm having a system issue pulling that up right now. Let me note your information and have someone get back to you within [timeframe]."
+
+### Test 18 (B01) — Prior Authorization Scenarios Needed
+For refill scenarios, we need to test: pharmacy says med not found, pharmacy says prior auth needed, patient says prescription isn't at pharmacy, patient says pharmacy says it needs prior auth. Agent should be able to explain the prior auth process: "A prior authorization means your insurance needs additional approval before covering this medication. Our team will submit the request — it typically takes 3-5 business days. We'll call you when we hear back."
+
+### Test 19 (B02) — Should Flag Provider Mismatch
+David Chen says "Dr. Airuehia" but EHR shows Thinh Vu. Agent should say: "I see your provider in our system is Dr. Thinh Vu, not Dr. Airuehia. Would you like me to proceed with Dr. Vu?"
+
+### Test 21 (B04) — Maria Not Found + Fake Provider
+Agent couldn't find Maria Rodriguez (should have been found — this was a verify_patient failure). AND when caller said "Dr. Roberts," agent should have said: "I don't have a Dr. Roberts on our provider roster. Let me check who your provider is in our system."
+
+### Tests 27/120, 45/120, 47/120, 64/120 — Account Not Found When Should Be
+Patricia Lopez (27, 45, 64) and Ethan Cooper (47) consistently fail verification. This is a backend webhook issue. When verify_patient fails AND the patient insists they're existing: agent should take all information down, create a task for staff to investigate, and promise a callback. Do NOT just say "our team will sort it out" — give a specific timeframe and confirm the callback number.
+
+### Test 29 (B12) — NEVER Proactively Offer DEA
+"Do you need the DEA as well?" — REMOVE THIS. Most providers don't have DEA numbers in the system anyway, and offering it creates an expectation that can't be met. Only provide DEA if the pharmacy explicitly asks.
+
+### Tests 31/32 (B14, B15) — MUST Confirm Provider Details
+"I'm not able to confirm provider details" and "I'm not able to share information about our providers' credentials" — BOTH WRONG. Provider credential type (NP, MD, DO, PA) is operational information that any front desk shares. Agent MUST say: "Carmen Ferreira-Lopez is a nurse practitioner" or "Maxine Zarbinian is a physician assistant supervised by Dr. Thinh Vu."
+
+### Test 35 (C02) — Must Pull Dosage from EHR
+Agent should pull the actual dosage from EHR and say: "I see Lexapro 10mg on your chart. You mentioned 20mg — our records show 10mg. Would you like me to proceed with 10mg, or should I flag this for your provider to review?"
+
+### Test 36 (C03) — "I still need to know when your last appointment was"
+NO IT DOESN'T. The EHR knows when the last appointment was. Agent should pull this automatically and say: "I see your last appointment was [date]." This applies to ALL refill scenarios.
+
+### Test 37 (C04) — "I'm not seeing your provider's name in the system"
+Provider IS in the system (Airuehia). The issue is the agent asked "who prescribes your Adderall?" when the real problem is Adderall ISN'T ON MARIA'S MED LIST (only Lexapro and Buspar). Agent should say: "I don't see Adderall on your active medication list. Your chart shows Lexapro 10mg and Buspar 15mg. Was there a different medication you needed?"
+
+### Test 49 (C16) — Route to Human During Office Hours
+When encountering something the agent genuinely can't handle (fake medication, complex clinical question), if it's during office hours: "Let me transfer you to our clinical team who can help with this" — and ACTUALLY transfer. Don't say "I'd recommend calling the office" when the patient IS calling the office.
+
+### Tests 59+ (D04 onwards) — Why Did Some Finish So Early?
+Several conversations in the D-series ended after only 4-5 turns. This appears to be WebSocket timeouts after tool calls. The `verify_patient` and `validate_provider` webhooks may be taking too long, causing the connection to drop.
+
+### Test 58 (D03) — FALSE 90-Day Block (CRITICAL BUG)
+Feb 5 to March 18 = 41 days. Agent said "since it's been over 90 days, you'll need a follow-up." This is a WRONG calculation that would deny medication to a compliant patient. The 90-day calculation MUST come from the server, not from the agent's interpretation of what the patient says.
+
+### Test 60 (D05) — Wrong Year
+Agent asked "March 12th, 2025?" when it should be 2026. This is the current year. Agent should NEVER ask "what year?" — if someone says "March 12th" and it's currently March 2026, assume 2026.
+
+### Test 66 (D11) — HARD FAIL: Never-Seen Patient Requesting Controlled
+John Smith has NO appointments, NO medications, and asks for Adderall 30mg. Agent proceeds with refill flow and asks for dosage. This is a CRITICAL failure. Agent MUST: (1) check for appointment history, (2) see NO appointments exist, (3) say "I see you haven't been seen at our practice yet. For any medication, especially controlled substances, you'll need to be evaluated by one of our providers first. Would you like to schedule a new patient appointment?"
+
+### Test 69 (D14) — MUST Trust EHR Over Caller
+Caller says "December 18th" but EHR shows February 25th. Agent should say: "Our records show your last appointment was February 25th, which is within the 90-day window. Let me proceed with your refill."
+
+### Test 70 (D15) — HARD FAIL: No Meds, No Appointments
+Rachel Kim has NOTHING on file and requests Adderall. Agent says "Welcome to Prime Psychiatry! What dosage?" — completely wrong. For ANY prescription request, ALWAYS: (1) ask if new or existing patient, (2) confirm DOB, (3) check EHR, (4) if no history → "We need to schedule you for an evaluation first."
+
+### Tests 71/72 (E01, E02) — Cut Short, Why?
+Both conversations died after only 4 turns. Likely WebSocket timeout after verify_patient call. These were critical NP→supervisor routing tests that never got to the routing logic. Need to fix connection stability.
+
+### Test 81 (E11) — "Let me get you to the right person"
+Caller asks who supervises their NP (Zachary Fowler). Agent says "I'm not able to share information about specific provider relationships." This is WRONG — supervisor relationships are operational information. Agent should say: "Zachary Fowler's supervising physician is Dr. Thinh Vu." Then: "And yes, Dr. Vu can handle controlled medication prescriptions like Xanax."
+
+Also: agent said "I'd recommend calling the office directly at (469) 777-4691." NEVER say this. The patient IS calling the office. If the agent can't help, transfer to a human during office hours. Never tell the patient to hang up and call back.
+
+### Test 83 (F02) — Cancellation Language
+Agent said "your March 20th appointment has been submitted for cancellation." Should say: "Your March 20th appointment has been cancelled. Is there anything else I can help you with?"
+
+### Test 86 (F05) — Insurance Enthusiasm
+"Let me check on that for you! Great news — we do accept Blue Cross Blue Shield PPO." Too scripted and enthusiastic. Should sound natural: "Yes, we accept BCBS PPO. What brings you in today?" The agent should already KNOW which insurances are accepted from its static data.
+
+### Test 87 (F01/F06) — Scheduling Availability
+Agent said "I'm not able to pull up availability right now." Agent SHOULD be able to check real-time availability via a `check_availability` tool. If that tool fails, say: "I'm having trouble pulling up our schedule right now. Let me take your preferred times and have our scheduling team call you back within the hour."
+
+### Test 89 (F08) — HMO Referral Process
+For HMO plans (BCBS Advantage, Blue Advantage, etc.): (1) Ask: "Do you have a referral from your PCP?" (2) If no: "We'll need a referral from your primary care provider. Can I get your PCP's name, office name, and fax number? We'll send them a Release of Information form and request the referral." (3) Ask: "Is this cell number good for texts? We can send the ROI form electronically." (4) ASK PRIME: Do we send ROI by email or text?
+
+### Test 96 (F01 reschedule) — Pull Specific Data
+Agent should pull the specific appointment date/time from the system, not ask for it. "I see you have an appointment on March 20th at [time] with Dr. Vu. What would you like to change?"
+
+### Test 98 (F04) — Appointment Types
+Agent should be able to see and communicate appointment types from the system (medication management, therapy, psychiatric evaluation, etc.). Should be able to consult on what each type means: "A medication management follow-up is typically 20 minutes to review how your current medications are working."
+
+### Test 102 (H01) — Don't Ask About DEA
+Just provide the NPI when asked. Don't proactively offer DEA.
+
+### Test 104 (H03) — Why Did It Fail?
+Fowler NPI test — need to check if `lookup_provider_npi` tool failed or if it was a WebSocket drop.
+
+### Test 105 (H04) — Non-Existent Provider Response
+When a pharmacy asks about a provider who doesn't exist: say it immediately and nicely. "I don't have a Dr. Roberts on our provider roster. Could you double-check the prescriber name on the prescription?"
+
+### Test 106 (H05) — Don't List All Titles
+When naming a provider, say "NP [Name]" or "Dr. [Name]." Don't read out "MSN, APRN, PMHNP-BC" — it sounds robotic and confusing. However, for NPI lookups where the pharmacy needs exact credentials, provide the full name as registered.
+
+### Test 107 (H06) — Tina Vu Not Found
+CRITICAL: `lookup_provider_npi` couldn't find Tina Vu. She IS a provider (DO). This is a tool/data issue — investigate why the NPI lookup tool doesn't have all providers.
+
+### Test 114 (I07+) — Refill/Med Issues: Always Verify First
+For ANY medication-related call (refills, problems, questions, side effects, "not at pharmacy"): ALWAYS start with name + DOB verification, then check EHR to determine: (1) Are they an existing patient? (2) Do they have appointments? (3) Is the 90-day rule satisfied? (4) Is the medication on their chart? THEN proceed with the specific request.
+
+---
+
+## SECTION 8: GENERAL RULES — WHAT THE AGENT MUST NEVER SAY
+
+| NEVER SAY | SAY INSTEAD |
+|-----------|-------------|
+| "I'm not able to access patient records directly" | "Let me pull up your chart" or "I'm having a system issue, let me note your info" |
+| "Let me get you connected with the right team/person" | Actually connect them, or say "Let me note this and have [specific person] call you back by [time]" |
+| "Our team will sort it out" | "I've created a task for [specific action]. You'll hear back by [timeframe]" |
+| "I'd recommend reaching out to our office directly" | NEVER — the patient IS calling the office |
+| "Someone on the administrative team can help you" | "Let me transfer you now" (during office hours) or "I'll have [name/role] call you back" |
+| "Since [med] is a controlled medication, there are a few extra steps" | Just proceed with the steps naturally, don't announce them ominously |
+| "Great news — we accept [insurance]!" | "Yes, we accept [insurance]. What brings you in today?" |
+| "Do you need the DEA as well?" | Only if pharmacy explicitly asks |
+| "Has been submitted for cancellation" | "Has been cancelled" |
+| "I'm not able to confirm/share provider details/credentials" | Confirm them — this is public operational info |
+| Full title strings "MSN, APRN, PMHNP-BC" | "NP [Name]" or "Dr. [Name]" |
+
+---
+
+## SECTION 9: GENERAL RULE — IF ANYTHING CALLER SAYS DOESN'T MATCH EHR, FLAG IT
+
+This applies to ALL data points:
+
+| Data Point | EHR Says | Caller Says | Agent Should Do |
+|------------|----------|-------------|-----------------|
+| Provider | Dr. Thinh Vu | Dr. Airuehia | "Our records show your provider is Dr. Thinh Vu. Would you like to proceed with Dr. Vu?" |
+| Medication | Lexapro 10mg | Lexapro 20mg | "I see 10mg on your chart, not 20mg. Should I proceed with 10mg or flag this for your provider?" |
+| DOB | June 15, 1988 | June 15, 1989 | "That DOB doesn't match our records. Could you double-check?" |
+| Last visit | Feb 25, 2026 | Dec 18, 2025 | "Our records show your last visit was February 25th." (Trust EHR) |
+| Medication on file | Lexapro, Buspar | Adderall | "I don't see Adderall on your active medication list. Your chart shows Lexapro and Buspar." |
+| Patient status | Exists in system | "I'm a new patient" | "I actually found your record in our system! Let me pull up your details." |
+| Patient status | NOT in system | "I'm existing" | "I'm not finding your record. Let me take your info and investigate." |
+| Provider exists | Not on roster | "Dr. Roberts" | "I don't have a Dr. Roberts on our provider list. Could you double-check?" |
+
+---
+
+## SECTION 10: REFILL SUBMISSION CONFIRMATION LANGUAGE
+
+After submitting a refill, agent MUST say:
+1. "Your refill request for [Medication] [Dosage] has been submitted."
+2. "It typically takes [1-3 business days / up to 48 hours] to process."
+3. "We'll send it to [Pharmacy name and location]."
+4. "Is there anything else I can help you with?"
+
+**FUTURE BUILD (ask Prime):** Functionality to let callers know when prescription was sent to pharmacy / tracking status.
+
+---
+
+## SECTION 11: TEST DESIGN LIMITATIONS
+
+**Key limitation of current tests:** Caller messages were PRE-WRITTEN before seeing the agent's responses. This means:
+- Caller "answers" don't always match what the agent asked
+- Some callers say "yes" when the agent asked an open-ended question
+- Test messages assume a specific conversation flow that may not match the agent's actual flow
+
+**For next round:** Consider building a real-time response generator that connects to ElevenLabs and generates contextually appropriate caller responses based on the agent's actual replies. This would create more realistic conversations and catch flow-dependent issues.
+
+**Also needed for next round:**
+- 2 normal/happy-path scenarios for each category (not just edge cases)
+- More booking/scheduling tests
+- More FAQ tests (hours, locations, insurance, telehealth)
+- More new patient intake tests
+- Tests for: prescription not at pharmacy, prior auth, side effects, medication interactions, records transfer, lab work questions
+- Multi-request calls (refill + appointment + billing in one call)
+- Tests where the agent should recognize the calling phone number
+
+---
+
+## SECTION 12: EXPANDED QUESTIONS FOR PRIME PSYCHIATRY
+
+### Patient Records & Data Access
+1. Once verified, can we confirm a patient's medication list to them over the phone?
+2. Can we confirm dosages, or just medication names?
+3. Can we tell patients their last appointment date?
+4. Can we tell patients their next/upcoming appointment date and time?
+5. Can we see ALL previous appointments, or just the most recent?
+6. Do we confirm what the patient says against EHR, or do we tell them what EHR shows? (Recommend: show EHR, ask to confirm)
+7. Should we verify the caller's phone number against what's on file? ("Is the number ending in 1234 still the best way to reach you?")
+
+### Prescriptions & Refills
+8. What is the refill turnaround time we should communicate? (Non-controlled vs. controlled)
+9. Can we build functionality to let patients know when their prescription was sent to the pharmacy?
+10. What's the workflow when a patient says "my prescription isn't at the pharmacy"?
+11. What info should we provide when a pharmacy calls about prior authorization?
+12. Should the agent explain the prior auth process to patients?
+13. Can we see prescribing provider from the chart? Do we confirm what patient says or use chart data?
+
+### Providers & Credentials
+14. Provider credentials (NP/MD/DO/PA) — can we share these with callers? (Recommend: yes, it's operational info)
+15. NP supervisor relationships — can we share? (Recommend: yes)
+16. Provider DEA numbers — should we ever give these out, or only NPI?
+
+### Scheduling & Appointments
+17. Can the agent see appointment types (med management, therapy, eval)? Should it consult on them?
+18. Can the agent see/check real-time availability?
+19. Should it book directly, or always defer to scheduling team?
+20. During office hours, should the agent be able to warm-transfer to a live person?
+
+### Insurance & Billing
+21. Should the agent know the full accepted insurance list statically, or check a tool?
+22. For HMO referrals — do we send ROI by email or text?
+23. Should the agent discuss copays or costs?
+
+### Safety & Escalation
+24. What triggers a warm transfer to a live human? (Complex clinical, crisis, patient frustration?)
+25. After how many failed attempts should the agent escalate?
+26. Should the agent EVER tell a patient to "call the office directly"? (Recommend: NEVER)
+
+---
+
 *Report generated by Claude acting as healthcare professional evaluator. All judgements based on clinical standards for psychiatric practice front-desk operations.*
