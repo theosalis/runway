@@ -1,0 +1,178 @@
+{
+  "suite": "12_ehr_integration",
+  "timestamp": "20260318_123940",
+  "elapsed_seconds": 293.2,
+  "grade": {
+    "letter_grade": "F",
+    "numeric_score": 0,
+    "total_weight_possible": 5,
+    "total_weight_lost": 5,
+    "breakdown_by_severity": {
+      "high": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "pass_rate": "0%"
+      }
+    },
+    "critical_failures": [],
+    "total_tests": 1,
+    "total_passed": 0,
+    "total_failed": 1
+  },
+  "verdicts": [
+    {
+      "test_name": "A01_maria_rodriguez_correct_name_dob",
+      "passed": false,
+      "confidence": 0,
+      "severity": "high",
+      "severity_label": "\ud83d\udfe0 HIGH",
+      "reasoning": "Claude API error: HTTP 400 \u2014 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_i",
+      "violations": [
+        "Judge API error"
+      ],
+      "mitigating_factors": [],
+      "weighted_score": 5
+    }
+  ],
+  "results": [
+    {
+      "test_name": "A01_maria_rodriguez_correct_name_dob",
+      "agent_id": "agent_0901kkw1tqv8fzp95hz7pk6g32p0",
+      "workflow_label": "workflow_1",
+      "total_duration_ms": 292323.92,
+      "avg_latency_ms": 982.99,
+      "max_latency_ms": 1857.6,
+      "p95_latency_ms": 1857.6,
+      "turn_count": 10,
+      "passed": true,
+      "failure_reason": null,
+      "expected_nodes": [],
+      "actual_nodes": [],
+      "turns": [
+        {
+          "turn": 0,
+          "user": "[CONVERSATION_START]",
+          "agent": "Thank you for calling Prime Psychiatry. How can I help you?",
+          "latency_ms": 258.78,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 1,
+          "user": "I need to refill a medication.",
+          "agent": "Sure, I can help with that. Can you tell me a bit more about what's going on with your medication?",
+          "latency_ms": 927.94,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_11_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 2,
+          "user": "Maria Rodriguez, date of birth June 15, 1988.",
+          "agent": "I appreciate that, but I don't need any personal information just yet. Can you tell me which medication you're looking to refill?",
+          "latency_ms": 1857.6,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 3,
+          "user": "Yes that's correct.",
+          "agent": "Could you let me know the name of the medication you need refilled?",
+          "latency_ms": 1176.44,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 4,
+          "user": "Lexapro.",
+          "agent": "Got it! And what dosage of Lexapro are you taking?",
+          "latency_ms": 899.33,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_1_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 5,
+          "user": "10 milligrams.",
+          "agent": "Let me pull up your information right now. I wasn't able to find your account \u2014 could you spell your last name for me so I can try again?",
+          "latency_ms": 905.09,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 6,
+          "user": "Dr. Airuehia.",
+          "agent": "No worries, let me try spelling your name. Could you spell your last name for me \u2014 is it R-O-D-R-I-G-U-E-Z?",
+          "latency_ms": 916.06,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 7,
+          "user": "CVS on Preston Road in Frisco, 972-555-1234.",
+          "agent": "Let me retry your information real quick. I wasn't able to locate your account, but no worries \u2014 I'll note your information and have our team look into it. Let me go ahead and validate your provider's name. No problem, our team will look up your provider",
+          "latency_ms": 1009.44,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            },
+            {
+              "name": "validate_provider",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 8,
+          "user": "Yes, that's all correct.",
+          "agent": "Great, let me go ahead and submit that refill request for you.",
+          "latency_ms": 972.6,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 9,
+          "user": "No, that's everything.",
+          "agent": "Perfect, let me get that submitted for you now!",
+          "latency_ms": 906.67,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        }
+      ]
+    }
+  ]
+}

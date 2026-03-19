@@ -1,0 +1,587 @@
+{
+  "suite": "12_ehr_integration",
+  "timestamp": "20260318_131714",
+  "elapsed_seconds": 945.0,
+  "grade": {
+    "letter_grade": "F",
+    "numeric_score": 0,
+    "total_weight_possible": 28,
+    "total_weight_lost": 28,
+    "breakdown_by_severity": {
+      "critical": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "pass_rate": "0%"
+      },
+      "high": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3,
+        "pass_rate": "0%"
+      },
+      "medium": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "pass_rate": "0%"
+      }
+    },
+    "critical_failures": [
+      "A05_sarah_brown_minor_inactive_record"
+    ],
+    "total_tests": 5,
+    "total_passed": 0,
+    "total_failed": 5
+  },
+  "verdicts": [
+    {
+      "test_name": "A01_maria_rodriguez_correct_name_dob",
+      "passed": false,
+      "confidence": 0,
+      "severity": "high",
+      "severity_label": "\ud83d\udfe0 HIGH",
+      "reasoning": "Claude API error: HTTP 400 \u2014 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_i",
+      "violations": [
+        "Judge API error"
+      ],
+      "mitigating_factors": [],
+      "weighted_score": 5
+    },
+    {
+      "test_name": "A02_maria_rodriguez_wrong_dob",
+      "passed": false,
+      "confidence": 0,
+      "severity": "high",
+      "severity_label": "\ud83d\udfe0 HIGH",
+      "reasoning": "Claude API error: HTTP 400 \u2014 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_i",
+      "violations": [
+        "Judge API error"
+      ],
+      "mitigating_factors": [],
+      "weighted_score": 5
+    },
+    {
+      "test_name": "A03_david_chen_misspelled_as_chenn",
+      "passed": false,
+      "confidence": 0,
+      "severity": "medium",
+      "severity_label": "\ud83d\udfe1 MEDIUM",
+      "reasoning": "Claude API error: HTTP 400 \u2014 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_i",
+      "violations": [
+        "Judge API error"
+      ],
+      "mitigating_factors": [],
+      "weighted_score": 3
+    },
+    {
+      "test_name": "A04_unknown_patient_not_in_system",
+      "passed": false,
+      "confidence": 0,
+      "severity": "high",
+      "severity_label": "\ud83d\udfe0 HIGH",
+      "reasoning": "Claude API error: HTTP 400 \u2014 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_i",
+      "violations": [
+        "Judge API error"
+      ],
+      "mitigating_factors": [],
+      "weighted_score": 5
+    },
+    {
+      "test_name": "A05_sarah_brown_minor_inactive_record",
+      "passed": false,
+      "confidence": 0,
+      "severity": "critical",
+      "severity_label": "\ud83d\udd34 CRITICAL",
+      "reasoning": "Claude API error: HTTP 400 \u2014 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_i",
+      "violations": [
+        "Judge API error"
+      ],
+      "mitigating_factors": [],
+      "weighted_score": 10
+    }
+  ],
+  "results": [
+    {
+      "test_name": "A01_maria_rodriguez_correct_name_dob",
+      "agent_id": "agent_0901kkw1tqv8fzp95hz7pk6g32p0",
+      "workflow_label": "workflow_1",
+      "total_duration_ms": 292416.42,
+      "avg_latency_ms": 1017.29,
+      "max_latency_ms": 1528.43,
+      "p95_latency_ms": 1528.43,
+      "turn_count": 10,
+      "passed": true,
+      "failure_reason": null,
+      "expected_nodes": [],
+      "actual_nodes": [],
+      "turns": [
+        {
+          "turn": 0,
+          "user": "[CONVERSATION_START]",
+          "agent": "Thank you for calling Prime Psychiatry. How can I help you?",
+          "latency_ms": 231.72,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 1,
+          "user": "I need to refill a medication.",
+          "agent": "Sure, I can help with that! Can you tell me a bit more about what's going on with your medication?",
+          "latency_ms": 1104.82,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_11_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 2,
+          "user": "Maria Rodriguez, date of birth June 15, 1988.",
+          "agent": "I appreciate that, but I don't need any personal information just yet. Can you tell me which medication you're looking to get refilled?",
+          "latency_ms": 910.53,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 3,
+          "user": "Yes that's correct.",
+          "agent": "Could you let me know the name of the medication you need refilled?",
+          "latency_ms": 922.55,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 4,
+          "user": "Lexapro.",
+          "agent": "Got it! And what dosage of Lexapro do you take?",
+          "latency_ms": 941.83,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_1_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 5,
+          "user": "10 milligrams.",
+          "agent": "Let me look up your information real quick. I wasn't able to find your account \u2014 could you spell your last name for me so I can try again?",
+          "latency_ms": 1465.18,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 6,
+          "user": "Dr. Airuehia.",
+          "agent": "I appreciate that! Let me just confirm the spelling of your last name first \u2014 could you spell out \"Rodriguez\" for me so I can locate your account?",
+          "latency_ms": 1528.43,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 7,
+          "user": "CVS on Preston Road in Frisco, 972-555-1234.",
+          "agent": "Got it, I'll hold onto that pharmacy info. Could you spell out your last name for me so I can try to pull up your account?",
+          "latency_ms": 833.86,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 8,
+          "user": "Yes, that's all correct.",
+          "agent": "I understand! Could you spell your last name for me \u2014 just the letters in \"Rodriguez\"? That'll help me search for your account.",
+          "latency_ms": 871.3,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 9,
+          "user": "No, that's everything.",
+          "agent": "No problem at all! Let me try to look you up one more time. I wasn't able to pull up your account, but no worries \u2014 I'll note your information and have our team look into it. Let me also validate your provider. It looks like Dr. Airue",
+          "latency_ms": 1362.65,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            },
+            {
+              "name": "validate_provider",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        }
+      ]
+    },
+    {
+      "test_name": "A02_maria_rodriguez_wrong_dob",
+      "agent_id": "agent_0901kkw1tqv8fzp95hz7pk6g32p0",
+      "workflow_label": "workflow_1",
+      "total_duration_ms": 169921.3,
+      "avg_latency_ms": 794.72,
+      "max_latency_ms": 1074.16,
+      "p95_latency_ms": 1074.16,
+      "turn_count": 6,
+      "passed": true,
+      "failure_reason": null,
+      "expected_nodes": [],
+      "actual_nodes": [],
+      "turns": [
+        {
+          "turn": 0,
+          "user": "[CONVERSATION_START]",
+          "agent": "Thank you for calling Prime Psychiatry. How can I help you?",
+          "latency_ms": 255.93,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 1,
+          "user": "I need a refill.",
+          "agent": "Sure, I can help with that. Can you tell me a bit more about what's going on with your medication?",
+          "latency_ms": 871.89,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_11_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 2,
+          "user": "Maria Rodriguez, date of birth June 15, 1989.",
+          "agent": "Thanks for that! I just need to know a little more about the medication itself \u2014 which medication are you looking to get refilled?",
+          "latency_ms": 1074.16,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 3,
+          "user": "I'm sure it's 1989.",
+          "agent": "No worries! Could you let me know which medication you're needing a refill for?",
+          "latency_ms": 825.08,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 4,
+          "user": "Hmm, could it be 1988?",
+          "agent": "I just need to know which medication you're looking to get refilled \u2014 can you share the name of it?",
+          "latency_ms": 845.5,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 5,
+          "user": "Yes that's me.",
+          "agent": "Of course! Which medication are you needing a refill for today?",
+          "latency_ms": 895.77,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        }
+      ]
+    },
+    {
+      "test_name": "A03_david_chen_misspelled_as_chenn",
+      "agent_id": "agent_0901kkw1tqv8fzp95hz7pk6g32p0",
+      "workflow_label": "workflow_1",
+      "total_duration_ms": 139436.8,
+      "avg_latency_ms": 1178.67,
+      "max_latency_ms": 3109.63,
+      "p95_latency_ms": 3109.63,
+      "turn_count": 5,
+      "passed": true,
+      "failure_reason": null,
+      "expected_nodes": [],
+      "actual_nodes": [],
+      "turns": [
+        {
+          "turn": 0,
+          "user": "[CONVERSATION_START]",
+          "agent": "Thank you for calling Prime Psychiatry. How can I help you?",
+          "latency_ms": 249.73,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 1,
+          "user": "I need to schedule a follow-up.",
+          "agent": "Sure, I can help with that! What is your name and date of birth?",
+          "latency_ms": 850.62,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_5_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 2,
+          "user": "David Chenn, C-H-E-N-N, DOB March 22, 1992.",
+          "agent": "Let me pull up your information right now. Could you spell out your last name for me one more time, just to make sure we have it right?",
+          "latency_ms": 873.09,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 3,
+          "user": "Oh wait, it's C-H-E-N. Just one N.",
+          "agent": "Got it, let me try that! I wasn't able to locate your account in our records. Are you perhaps a new patient with us?",
+          "latency_ms": 810.29,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 4,
+          "user": "Yes that's me.",
+          "agent": "Since you're a new patient, let me get you set up with our registration process. What is your full name, first and last?",
+          "latency_ms": 3109.63,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_2_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        }
+      ]
+    },
+    {
+      "test_name": "A04_unknown_patient_not_in_system",
+      "agent_id": "agent_0901kkw1tqv8fzp95hz7pk6g32p0",
+      "workflow_label": "workflow_1",
+      "total_duration_ms": 169798.68,
+      "avg_latency_ms": 949.19,
+      "max_latency_ms": 1744.6,
+      "p95_latency_ms": 1744.6,
+      "turn_count": 6,
+      "passed": true,
+      "failure_reason": null,
+      "expected_nodes": [],
+      "actual_nodes": [],
+      "turns": [
+        {
+          "turn": 0,
+          "user": "[CONVERSATION_START]",
+          "agent": "Thank you for calling Prime Psychiatry. How can I help you?",
+          "latency_ms": 262.9,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 1,
+          "user": "I'd like to schedule an appointment.",
+          "agent": "Sure, I can help with that. Are you a new patient or an existing patient with us?",
+          "latency_ms": 883.94,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 2,
+          "user": "My name is Franklin Washington, DOB January 1, 1970.",
+          "agent": "Thanks, Franklin! Are you an existing patient with us, or would this be your first time visiting Prime Psychiatry?",
+          "latency_ms": 1744.6,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 3,
+          "user": "W-A-S-H-I-N-G-T-O-N.",
+          "agent": "Thank you! I just want to confirm \u2014 are you an existing patient with us, or would this be your first time?",
+          "latency_ms": 854.4,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 4,
+          "user": "I'm definitely a patient. I've been going there for years.",
+          "agent": "Got it, thanks Franklin! I wasn't able to pull up your account \u2014 could you spell out your last name for me so I can try again?",
+          "latency_ms": 1102.61,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_5_met",
+              "type": "workflow"
+            },
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 5,
+          "user": "Okay, I guess I need to register as new then.",
+          "agent": "Since you're a new patient, let me get you set up with our registration process. What is your full name, first and last?",
+          "latency_ms": 846.7,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_2_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        }
+      ]
+    },
+    {
+      "test_name": "A05_sarah_brown_minor_inactive_record",
+      "agent_id": "agent_0901kkw1tqv8fzp95hz7pk6g32p0",
+      "workflow_label": "workflow_1",
+      "total_duration_ms": 169891.88,
+      "avg_latency_ms": 797.37,
+      "max_latency_ms": 1004.14,
+      "p95_latency_ms": 1004.14,
+      "turn_count": 6,
+      "passed": true,
+      "failure_reason": null,
+      "expected_nodes": [],
+      "actual_nodes": [],
+      "turns": [
+        {
+          "turn": 0,
+          "user": "[CONVERSATION_START]",
+          "agent": "Thank you for calling Prime Psychiatry. How can I help you?",
+          "latency_ms": 271.72,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 1,
+          "user": "I need to schedule an appointment for my daughter Sarah.",
+          "agent": "Sure, I can help with that. Is Sarah an existing patient with us, or would this be her first time coming in?",
+          "latency_ms": 896.12,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 2,
+          "user": "Sarah Brown, date of birth April 12, 2010.",
+          "agent": "Thank you! And is Sarah an existing patient with us, or would this be her first time?",
+          "latency_ms": 849.27,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 3,
+          "user": "Yes, she's 15 years old. She used to be a patient.",
+          "agent": "Got it, so she's an existing patient looking to schedule a follow-up. Let me get you connected with the right team for that. I wasn't able to find Sarah in our records. Could you spell out her last name for me just to make sure?",
+          "latency_ms": 1004.14,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_5_met",
+              "type": "workflow"
+            },
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 4,
+          "user": "I'm her mother, Lisa Brown.",
+          "agent": "Of course! Could you spell out Sarah's last name for me? Just want to make sure we're searching correctly.",
+          "latency_ms": 886.23,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 5,
+          "user": "We'd like to reactivate her as a patient.",
+          "agent": "I completely understand! Let me try searching one more time \u2014 could you spell out Sarah's last name for me?",
+          "latency_ms": 876.74,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        }
+      ]
+    }
+  ]
+}
