@@ -35,3 +35,17 @@ INTER_CALL_DELAY = 1.0
 # Output directory for results
 RESULTS_DIR = os.path.join(os.path.dirname(__file__), "results")
 os.makedirs(RESULTS_DIR, exist_ok=True)
+
+# ─── Adaptive Runner Configuration ──────────────────────────────
+# Model for LLM-powered caller simulation (Haiku = fast + cheap)
+CALLER_MODEL = os.environ.get("CALLER_MODEL", "claude-haiku-4-5-20251001")
+CALLER_MAX_TOKENS = 300
+ADAPTIVE_MAX_TURNS = 15  # Adaptive conversations are typically shorter
+
+# ─── Parallel Runner Configuration ──────────────────────────────
+DEFAULT_CONCURRENCY = 100          # Max simultaneous conversations (scripted)
+DEFAULT_STAGGER_RATE = 10.0        # New connections per second
+COMBINED_DEFAULT_CONCURRENCY = 50  # Lower for adaptive+parallel (extra API load)
+
+# ─── Anthropic Configuration ───────────────────────────────────
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")

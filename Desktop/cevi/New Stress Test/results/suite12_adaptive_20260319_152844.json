@@ -1,0 +1,174 @@
+{
+  "suite": "12_ehr_integration",
+  "mode": "adaptive",
+  "timestamp": "20260319_152844",
+  "elapsed_seconds": 267.3,
+  "summary": {
+    "total_tests": 1,
+    "completed": 1,
+    "empty_failed": 0
+  },
+  "results": [
+    {
+      "test_name": "A01_maria_rodriguez_correct_name_dob",
+      "agent_id": "agent_0901kkw1tqv8fzp95hz7pk6g32p0",
+      "workflow_label": "workflow_1",
+      "total_duration_ms": 267020.8,
+      "avg_latency_ms": 1187.89,
+      "max_latency_ms": 1998.01,
+      "p95_latency_ms": 1998.01,
+      "turn_count": 9,
+      "passed": true,
+      "failure_reason": null,
+      "expected_nodes": [],
+      "actual_nodes": [],
+      "turns": [
+        {
+          "turn": 0,
+          "user": "[CONVERSATION_START]",
+          "agent": "Thank you for calling Prime Psychiatry. How can I help you?",
+          "latency_ms": 404.34,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 1,
+          "user": "Hi, yeah, I need to refill my Lexapro prescription.",
+          "agent": "I can help with that. Could I please get your name and date of birth?",
+          "latency_ms": 1998.01,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_11_met",
+              "type": "workflow"
+            },
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_1_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 2,
+          "user": "Sure, it's Maria Rodriguez, and my date of birth is June 15th, 1988.",
+          "agent": "Let me pull up your account. Got you, Maria. What dosage of Lexapro are you taking?",
+          "latency_ms": 871.04,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "verify_patient",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 3,
+          "user": "I'm on 10mg.",
+          "agent": "And who is your prescribing provider?",
+          "latency_ms": 1548.04,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 4,
+          "user": "That's Dr. Efosa Airuehia.",
+          "agent": "Let me verify that for you. Got it. When was your last appointment with us?",
+          "latency_ms": 845.32,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "validate_provider",
+              "type": "webhook"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 5,
+          "user": "Um, I'm not exactly sure off the top of my head, but it's been a few months I think?",
+          "agent": "No worries. Do you have a rough idea \u2014 would you say it's been more or less than 90 days?",
+          "latency_ms": 1968.51,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 6,
+          "user": "Yeah, it's been longer than that, probably like 4 or 5 months ago maybe?",
+          "agent": "Since it's been over 90 days, you'll need a follow-up appointment before we can process this refill. Would you like to schedule one?",
+          "latency_ms": 1005.03,
+          "node": null,
+          "tool_calls": [],
+          "error": null
+        },
+        {
+          "turn": 7,
+          "user": "Oh okay, yeah that makes sense. Can we just schedule something soon? I'm running low on my medication.",
+          "agent": "Of course! Let me get that set up for you. I'm going to connect you with our scheduling team to get you an appointment as soon as possible. I've put in a request for our team to reach out to you to get an appointment scheduled quickly. Since you're running low, I'd also recommend calling your pharmacy to let them know \u2014 sometimes they can provide a short supply in the meantime. Is there anything else I can help you with?",
+          "latency_ms": 1041.53,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "create_refill_task",
+              "type": "webhook"
+            },
+            {
+              "name": "transfer_to_agent",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_2_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        },
+        {
+          "turn": 8,
+          "user": "No, that's great, thanks so much for your help!",
+          "agent": "Thank you for calling Prime Psychiatry. Take care!",
+          "latency_ms": 1009.18,
+          "node": null,
+          "tool_calls": [
+            {
+              "name": "log_resolved_call",
+              "type": "webhook"
+            },
+            {
+              "name": "end_call",
+              "type": "system"
+            },
+            {
+              "name": "notify_condition_2_met",
+              "type": "workflow"
+            }
+          ],
+          "error": null
+        }
+      ],
+      "_test_metadata": {
+        "pass_criteria": "Agent must successfully verify Maria Rodriguez (DOB 6/15/1988) in the EHR, confirm her identity, and proceed with the refill flow. By the end, the refill should be submitted with 48-hour turnaround mentioned for non-controlled medication.",
+        "severity": "high",
+        "context": "EHR: Maria Rodriguez, DOB 1988-06-15, provider Efosa Airuehia (MD), active meds: Lexapro 10mg, Buspar 15mg.",
+        "mode": "adaptive",
+        "persona": {
+          "name": "Maria Rodriguez",
+          "goal": "I need to refill my Lexapro.",
+          "behavior": "Cooperative and provides information when asked."
+        }
+      }
+    }
+  ]
+}
